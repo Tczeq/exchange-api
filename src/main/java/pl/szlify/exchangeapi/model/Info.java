@@ -9,11 +9,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class ConvertResponse {
+public class Info {
+    private long timestamp;
+    private double rate;
 
-    private boolean success;
-    private Query query;
-    private Info info;
-    private String date;
-    private double result;
 }

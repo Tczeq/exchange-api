@@ -1,4 +1,4 @@
-package pl.szlify.exchangeapi.resource;
+package pl.szlify.exchangeapi.model;
 
 
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.Map;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ExchangeResource {
+public class SymbolsDto {
     private boolean success;
     private Map<String, String> symbols;
 }

@@ -2,18 +2,17 @@ package pl.szlify.exchangeapi.service;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import pl.szlify.exchangeapi.model.TestModel;
-import pl.szlify.exchangeapi.properties.ExchangeApiProperties;
+import pl.szlify.exchangeapi.client.ExchangeClient;
+import pl.szlify.exchangeapi.model.SymbolsDto;
 
 @Service
 @RequiredArgsConstructor
 public class ExchangeService {
 
-    private final ExchangeApiProperties properties;
+    private final ExchangeClient exchangeClient;
 
-    public TestModel test() {
-        return new TestModel(properties.getBaseUrl(), properties.getApiKey());
+    public SymbolsDto getAllSymbols() {
+        return exchangeClient.findAll();
     }
 }

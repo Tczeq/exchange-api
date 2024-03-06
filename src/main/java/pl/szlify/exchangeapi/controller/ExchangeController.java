@@ -13,14 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.szlify.exchangeapi.model.ExchangeClient;
-import pl.szlify.exchangeapi.model.ExchangeResource;
-import pl.szlify.exchangeapi.model.ResponseApi;
+import pl.szlify.exchangeapi.client.ExchangeClient;
+import pl.szlify.exchangeapi.resource.ExchangeResource;
 import pl.szlify.exchangeapi.model.TestModel;
 import pl.szlify.exchangeapi.properties.ExchangeApiProperties;
 import pl.szlify.exchangeapi.service.ExchangeService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/exchange")
@@ -38,27 +35,12 @@ public class ExchangeController {
     public ResponseEntity<TestModel> getResponse() {
         TestModel testModel = exchangeService.test();
         return ResponseEntity.status(HttpStatus.CREATED)
-                .header("My-Header", "My-Value")
+                .header("name", "values")
                 .body(testModel);
     }
 
-//    @GetMapping("/symbols")
-//    public ResponseEntity<List<ExchangeResource>> getResponseClient(){
-//
-//        ExchangeClient exchangeClient = Feign.builder()
-//                .client(new OkHttpClient())
-//                .encoder(new GsonEncoder())
-//                .decoder(new GsonDecoder())
-//                .logger(new Slf4jLogger(ExchangeClient.class))
-//                .logLevel(Logger.Level.FULL)
-//                .target(ExchangeClient.class, "http://localhost:8081/api/symbols");
-//
-//        List<ExchangeResource> symbols = exchangeClient.findAll();
-//        return new ResponseEntity<>(symbols, HttpStatus.OK);
-//    }
-
     @GetMapping("/symbols")
-    public ResponseEntity<ResponseApi> getSymbols() {
+    public ResponseEntity<ExchangeResource> getSymbols() {
 
         RequestInterceptor requestInterceptor = requestTemplate -> {
             requestTemplate.header("apikey", exchangeApiProperties.getApiKey());
@@ -71,12 +53,10 @@ public class ExchangeController {
                 .logger(new Slf4jLogger(ExchangeClient.class))
                 .logLevel(Logger.Level.FULL)
                 .requestInterceptor(requestInterceptor)
-                .target(ExchangeClient.class, "https://api.apilayer.com/exchangerates_data/symbols");
+                .target(ExchangeClient.class, exchangeApiProperties.getBaseUrl());
 
-
-
-        ResponseApi responseApi = exchangeClient.findAll();
-        return new ResponseEntity<>(responseApi, HttpStatus.OK);
+        ExchangeResource exchangeResource = exchangeClient.findAll();
+        return new ResponseEntity<>(exchangeResource, HttpStatus.OK);
     }
 
 

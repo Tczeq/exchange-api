@@ -1,14 +1,18 @@
-package pl.szlify.exchangeapi.model;
+package pl.szlify.exchangeapi.resource;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Map;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public class ExchangeResource {
-    private Exchange exchange;
+    private boolean success;
+    private Map<String, String> symbols;
 }

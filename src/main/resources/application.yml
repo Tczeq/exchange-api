@@ -1,5 +1,5 @@
 exchange:
   api:
-    base-url: https://api.apilayer.com/exchangerates_data/symbols
+    base-url: https://api.apilayer.com/exchangerates_data
     api-key: 0N48LEmVqIMNZS08m8NTWdG6ItuYwMVI
 

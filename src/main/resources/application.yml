@@ -2,4 +2,12 @@ exchange:
   api:
     base-url: https://api.apilayer.com/exchangerates_data
     api-key: 0N48LEmVqIMNZS08m8NTWdG6ItuYwMVI
-
+#spring:
+#  cache:
+#    cache-names: cacheSymbols
+#    caffeine:
+#      spec: maximumSize=500,expireAfterAccess=600s
+logging:
+  level:
+    root: INFO
+    pl.szlify.exchangeapi.service: DEBUG

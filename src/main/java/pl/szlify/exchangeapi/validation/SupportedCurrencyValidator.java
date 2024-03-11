@@ -12,6 +12,9 @@ public class SupportedCurrencyValidator implements ConstraintValidator<Supported
 
     @Override
     public boolean isValid(String currencySymbol, ConstraintValidatorContext constraintValidatorContext) {
+        if(currencySymbol == null) {
+            return false;
+        }
         return exchangeService.getAllSymbols().getSymbols().containsKey(currencySymbol);
     }
 }

@@ -33,28 +33,28 @@ public class SecurityConfig {
     public InMemoryUserDetailsManager userDetailsManager() {
         UserDetails john = User.builder()
                 .username("john")
-                .password("test123")
+                .password("{bcrypt}$2a$10$m8D4KGHnY5KHRz0bcUlF/eapHPGoP3uviDpRQt/4rqMCxcyyV8Umu")
                 .roles("EMPLOYEE")
                 .build();
 
         UserDetails mary = User.builder()
                 .username("mary")
-                .password("test123")
+                .password("{bcrypt}$2a$10$m8D4KGHnY5KHRz0bcUlF/eapHPGoP3uviDpRQt/4rqMCxcyyV8Umu")
                 .roles("EMPLOYEE", "MANAGER")
                 .build();
 
         UserDetails susan = User.builder()
                 .username("susan")
-                .password("test123")
+                .password("{bcrypt}$2a$10$m8D4KGHnY5KHRz0bcUlF/eapHPGoP3uviDpRQt/4rqMCxcyyV8Umu") //test123
                 .roles("EMPLOYEE", "MANAGER", "ADMIN")
                 .build();
         return new InMemoryUserDetailsManager(john, mary, susan);
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
-    }
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return NoOpPasswordEncoder.getInstance();
+//    }
 
 
     @Bean
@@ -62,7 +62,6 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(configurer ->
                 configurer
                         .requestMatchers(HttpMethod.GET, "/api/exchange/symbols").hasRole("EMPLOYEE")
-//                        .requestMatchers(HttpMethod.GET, "/api/exchange/**").hasRole("EMPLOYEE")
                         .requestMatchers(HttpMethod.GET, "/api/exchange/convert/**").hasRole("MANAGER")
                         .requestMatchers(HttpMethod.GET, "/api/exchange/convert/**").hasRole("ADMIN")
 

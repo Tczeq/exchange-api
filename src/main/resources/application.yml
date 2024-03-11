@@ -11,9 +11,3 @@ exchange:
 #  level:
 #    root: INFO
 #    pl.szlify.exchangeapi.service: DEBUG
-
-spring:
-  security:
-    user:
-      name: user
-      password: user

@@ -3,15 +3,12 @@ package pl.szlify.exchangeapi.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.szlify.exchangeapi.configuration.CacheConfig;
 import pl.szlify.exchangeapi.model.ConvertRequest;
 import pl.szlify.exchangeapi.model.ConvertResponse;
 import pl.szlify.exchangeapi.model.SymbolsDto;
@@ -24,7 +21,7 @@ import pl.szlify.exchangeapi.service.ExchangeService;
 public class ExchangeController {
 
     private final ExchangeService exchangeService;
-    @Cacheable(cacheNames = "cacheSymbols")
+//    @Cacheable(cacheNames = "cacheSymbols") //TODO: do serwisu
     @GetMapping("/symbols")
     public ResponseEntity<SymbolsDto> getSymbols() {
         SymbolsDto symbolsDto = exchangeService.getAllSymbols();

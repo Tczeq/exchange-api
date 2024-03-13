@@ -1,7 +1,10 @@
 exchange:
   api:
+    simulated: true
     base-url: https://api.apilayer.com/exchangerates_data
-    api-key: 0N48LEmVqIMNZS08m8NTWdG6ItuYwMVI
+    api-key: D8FwM98Y6Hq9w8vVqKvZhyT6nx8pj5UJ
+#    0N48LEmVqIMNZS08m8NTWdG6ItuYwMVI
+
 #spring:
 #  cache:
 #    cache-names: cacheSymbols
@@ -11,3 +14,18 @@ exchange:
 #  level:
 #    root: INFO
 #    pl.szlify.exchangeapi.service: DEBUG
+
+
+
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: exchangeapka@gmail.com
+    password: byqp mmdo avhd yrah
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

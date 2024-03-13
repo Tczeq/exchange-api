@@ -11,7 +11,8 @@ import pl.szlify.exchangeapi.model.SymbolsDto;
 import java.math.BigDecimal;
 
 
-@FeignClient(name = "api-service", url = "${exchange.api.api-key}")
+
+@FeignClient(name = "exchange-service", url = "${exchange.api.base-url}")
 public interface ExchangeClient {
 
 

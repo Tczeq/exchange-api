@@ -14,7 +14,8 @@ import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "exchange.api.simulated", havingValue = "true")
+//@ConditionalOnProperty(value = "exchange.api.simulated", havingValue = "true")
+@ConditionalOnProperty(prefix = "notification", name = "exchange.api.simulated", havingValue = "true")
 public class ExchangeServiceSimulated implements ExchangeService {
 
     private final EmailService emailService;

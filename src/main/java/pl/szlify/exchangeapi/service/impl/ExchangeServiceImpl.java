@@ -29,7 +29,7 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     public ConvertResponse getConvertedCurrency(String from, String to, BigDecimal amount) {
         ConvertResponse convertResponse = exchangeClient.convert(from, to, amount);
-        emailService.sendConfirmation("testMail", convertResponse); //TODO: mail do poprawienia
+        emailService.sendConfirmation("testMail@gmail.com", convertResponse); //TODO: mail do poprawienia
         return convertResponse;
     }
 }

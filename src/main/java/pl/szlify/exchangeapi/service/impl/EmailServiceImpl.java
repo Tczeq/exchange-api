@@ -23,4 +23,15 @@ public class EmailServiceImpl implements EmailService {
         message.setText("DUPA"); //TODO: utworzyć metodę, która na bazie convertResponse utworzy treść maila
         emailSender.send(message);
     }
+
+    @Override
+    public void sendConf(String to) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("exchangeapka@gmail.com");
+        message.setTo(to);
+        message.setSubject(SUBJECT);
+        message.setText("DUPA"); //TODO: utworzyć metodę, która na bazie convertResponse utworzy treść maila
+        emailSender.send(message);
+    }
+
 }

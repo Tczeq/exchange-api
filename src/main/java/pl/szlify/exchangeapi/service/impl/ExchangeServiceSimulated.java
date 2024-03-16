@@ -11,6 +11,8 @@ import pl.szlify.exchangeapi.service.EmailService;
 import pl.szlify.exchangeapi.service.ExchangeService;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +25,14 @@ public class ExchangeServiceSimulated implements ExchangeService {
 
     @Override
     public SymbolsDto getAllSymbols() {
-        return null;
+        Map<String, String> symbolsMap = new HashMap<>();
+        symbolsMap.put("AED", "United Arab Emirates Dirham");
+        SymbolsDto symbolsDto = SymbolsDto.builder()
+                .success(true)
+                .symbols(symbolsMap)
+                .build();
+        emailService.sendConf(getEmailUsername);
+        return symbolsDto;
     }
 
     @Override

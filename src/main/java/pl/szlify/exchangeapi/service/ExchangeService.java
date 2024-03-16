@@ -6,7 +6,9 @@ import pl.szlify.exchangeapi.model.SymbolsDto;
 import java.math.BigDecimal;
 
 public interface ExchangeService {
+
     SymbolsDto getAllSymbols();
+
 
     ConvertResponse getConvertedCurrency(String from, String to, BigDecimal amount);
 }

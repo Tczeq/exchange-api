@@ -21,7 +21,7 @@ import pl.szlify.exchangeapi.service.ExchangeService;
 public class ExchangeController {
 
     private final ExchangeService exchangeService;
-//    @Cacheable(cacheNames = "cacheSymbols") //TODO: do serwisu
+
     @GetMapping("/symbols")
     public ResponseEntity<SymbolsDto> getSymbols() {
         SymbolsDto symbolsDto = exchangeService.getAllSymbols();

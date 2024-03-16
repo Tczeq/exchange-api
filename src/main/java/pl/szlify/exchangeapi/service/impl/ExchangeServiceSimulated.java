@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 public class ExchangeServiceSimulated implements ExchangeService {
 
     private final EmailService emailService;
+    private final String getEmailUsername; //Bean
 
     @Override
     public SymbolsDto getAllSymbols() {
@@ -41,7 +42,7 @@ public class ExchangeServiceSimulated implements ExchangeService {
                 .date("2024-03-06")
                 .result(1290.26)
                 .build();
-        emailService.sendConfirmation("exchangeapka@gmail.com", convertResponse);
+        emailService.sendConfirmation(getEmailUsername, convertResponse);
         return convertResponse;
     }
 }

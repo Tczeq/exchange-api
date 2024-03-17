@@ -29,8 +29,8 @@ public class ExchangeServiceImpl implements ExchangeService {
 //    private String emailUsername;
     private final String getEmailUsername; //wstrzykniety @Bean z klasy EmailConfig, nie trzeba uzywac tutaj @Value
 
-    @Scheduled(fixedRate = 10000) //1 minuta = 60000
-//    @Cacheable(cacheNames = "cacheSymbols")
+    @Scheduled(fixedRate = 300000) //1 minuta = 60000
+    @Cacheable(cacheNames = "cacheSymbols")
     @Override
     public SymbolsDto getAllSymbols() {
         emailService.sendConf(getEmailUsername);

@@ -24,9 +24,6 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     private final ExchangeClient exchangeClient;
     private final EmailService emailService;
-
-    //    @Value("${spring.mail.username}")
-//    private String emailUsername;
     private final String getEmailUsername; //wstrzykniety @Bean z klasy EmailConfig, nie trzeba uzywac tutaj @Value
 
     @Scheduled(fixedRate = 300000) //1 minuta = 60000
@@ -40,14 +37,8 @@ public class ExchangeServiceImpl implements ExchangeService {
     //    @Scheduled(fixedRate = 10000) //1 minuta = 60000
     public ConvertResponse getConvertedCurrency(String from, String to, BigDecimal amount) {
         ConvertResponse convertResponse = exchangeClient.convert(from, to, amount);
-//        emailService.sendConfirmation("exchangeapka@gmail.com", convertResponse);
         emailService.sendConfirmation(getEmailUsername, convertResponse); //TODO: mail do poprawienia
         return convertResponse;
     }
 
-
-//    @Override
-//    public ConvertResponse getConvertedCurrency(String from, String to, BigDecimal amount) {
-//        return null;
-//    }
 }

@@ -72,26 +72,15 @@ public class SecurityConfig {
 
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/").permitAll();
                     auth.anyRequest().authenticated();
                 })
-                .oauth2Login(withDefaults()) // Włączenie logowania OAuth 2.0
-//                .oauth2Client(withDefaults())
+                .oauth2Login(withDefaults())
                 .formLogin(withDefaults())
                 .build();
     }
-
-
-
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeRequests(authorize -> authorize
-//                        .anyRequest().authenticated()
-//                )
-//                .oauth2Login(Customizer.withDefaults());
-//    }
 
 }

@@ -34,4 +34,3 @@ build/
 
 # file with logins and passwords
 secrets.yml
-application.yml

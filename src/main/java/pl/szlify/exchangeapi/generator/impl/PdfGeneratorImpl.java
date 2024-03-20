@@ -4,6 +4,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +37,9 @@ public class PdfGeneratorImpl implements PdfService {
             PdfWriter.getInstance(document, new FileOutputStream(path));
             document.open();
 
+            addTable(document, convertResponse);
             addContentToDocument(document, convertResponse);
-            addImageToDocument(document, "src/main/resources/ok.png");
+            addImageToDocument(document);
 
         } catch (DocumentException | IOException e) {
             throw new RuntimeException(e);
@@ -56,8 +58,8 @@ public class PdfGeneratorImpl implements PdfService {
         }
     }
 
-    private void addImageToDocument(Document document, String imagePath) throws IOException, DocumentException {
-        Image image = Image.getInstance(imagePath);
+    private void addImageToDocument(Document document) throws IOException, DocumentException {
+        Image image = Image.getInstance("src/main/resources/ok.png");
         image.scalePercent(5);
         document.add(image);
     }
@@ -85,7 +87,7 @@ public class PdfGeneratorImpl implements PdfService {
                 .append("/")
                 .append(convertResponse.getQuery().getTo())
                 .append("\n");
-        emailContent.append(" - Ilość: ")
+        emailContent.append(" - Ilosc: ")
                 .append(convertResponse.getQuery().getAmount())
                 .append("\n");
         emailContent.append(" - Kurs: ")
@@ -100,4 +102,27 @@ public class PdfGeneratorImpl implements PdfService {
 
         return emailContent.toString();
     }
+
+
+    public void addTable(Document document, ConvertResponse convertResponse) {
+        PdfPTable table = new PdfPTable(2);
+
+        table.addCell("Data wymiany");
+        table.addCell(convertResponse.getDate());
+        table.addCell("Para walutowa");
+        table.addCell(convertResponse.getQuery().getFrom() + "/" + convertResponse.getQuery().getTo());
+        table.addCell("Ilosc");
+        table.addCell(String.valueOf(convertResponse.getQuery().getAmount()));
+        table.addCell("Kurs");
+        table.addCell(String.valueOf(convertResponse.getInfo().getRate()));
+        table.addCell("Wynik transakcji");
+        table.addCell(String.valueOf(convertResponse.getResult()));
+
+        try {
+            document.add(table);
+        } catch (DocumentException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

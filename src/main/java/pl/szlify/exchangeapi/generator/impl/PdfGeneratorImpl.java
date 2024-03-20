@@ -16,6 +16,7 @@ import pl.szlify.exchangeapi.model.ConvertResponse;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -67,40 +68,64 @@ public class PdfGeneratorImpl implements PdfService {
 
     @Override
     public String createEmailContent(ConvertResponse convertResponse) {
-        StringBuilder emailContent = new StringBuilder();
+//        StringBuilder emailContent = new StringBuilder();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDate date = LocalDate.parse(convertResponse.getDate());
-        emailContent.append("Potwierdzenie wymiany walut,")
-                .append("\n")
-                .append("z dnia: ")
-                .append(date.format(formatter))
-                .append("\n\n");
-        emailContent.append("Sukces: ")
-                .append(convertResponse.isSuccess() ? "Tak" : "Nie")
-                .append("\n\n");
+//        emailContent.append("Potwierdzenie wymiany walut,")
+//                .append("\n")
+//                .append("z dnia: ")
+//                .append(date.format(formatter))
+//                .append("\n\n");
+//        emailContent.append("Sukces: ")
+//                .append(convertResponse.isSuccess() ? "Tak" : "Nie")
+//                .append("\n\n");
+//
+//        DecimalFormat formatRate = new DecimalFormat("0.00");
+//        emailContent.append("Wymiana:")
+//                .append("\n");
+//        emailContent.append(" - ")
+//                .append(convertResponse.getQuery().getFrom())
+//                .append("/")
+//                .append(convertResponse.getQuery().getTo())
+//                .append("\n");
+//        emailContent.append(" - Ilosc: ")
+//                .append(convertResponse.getQuery().getAmount())
+//                .append("\n");
+//        emailContent.append(" - Kurs: ")
+//                .append(formatRate.format(convertResponse.getInfo().getRate()))
+//                .append("\n");
+//
+//        DecimalFormat format = new DecimalFormat("#.##");
+//        emailContent.append("Wynik transakcji: ")
+//                .append(format.format(convertResponse.getResult()))
+//                .append(" ")
+//                .append(convertResponse.getQuery().getTo());
+        return MessageFormat.format("""
+                Potwierdzenie wymiany walut,
+                z dnia: {0}
+                
+                Sukces: {1}
+                
+                Wymiana: {2}/{3}
+                Ilość: {4}
+                """,
+                date.format(formatter),
+                convertResponse.isSuccess() ? "Tak" : "Nie",
+                convertResponse.getQuery().getFrom(),
+                convertResponse.getQuery().getTo(),
+                convertResponse.getQuery().getAmount());
 
-        DecimalFormat formatRate = new DecimalFormat("0.00");
-        emailContent.append("Wymiana:")
-                .append("\n");
-        emailContent.append(" - ")
-                .append(convertResponse.getQuery().getFrom())
-                .append("/")
-                .append(convertResponse.getQuery().getTo())
-                .append("\n");
-        emailContent.append(" - Ilosc: ")
-                .append(convertResponse.getQuery().getAmount())
-                .append("\n");
-        emailContent.append(" - Kurs: ")
-                .append(formatRate.format(convertResponse.getInfo().getRate()))
-                .append("\n");
+//        emailContent.append(" - Kurs: ")
+//                .append(formatRate.format(convertResponse.getInfo().getRate()))
+//                .append("\n");
+//
+//        DecimalFormat format = new DecimalFormat("#.##");
+//        emailContent.append("Wynik transakcji: ")
+//                .append(format.format(convertResponse.getResult()))
+//                .append(" ")
+//                .append(convertResponse.getQuery().getTo());
 
-        DecimalFormat format = new DecimalFormat("#.##");
-        emailContent.append("Wynik transakcji: ")
-                .append(format.format(convertResponse.getResult()))
-                .append(" ")
-                .append(convertResponse.getQuery().getTo());
-
-        return emailContent.toString();
+//        return emailContent.toString();
     }
 
 

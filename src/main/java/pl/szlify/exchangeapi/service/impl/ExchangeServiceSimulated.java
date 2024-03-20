@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import pl.szlify.exchangeapi.client.ExchangeClient;
+import pl.szlify.exchangeapi.model.ConvertRequest;
 import pl.szlify.exchangeapi.model.ConvertResponse;
 import pl.szlify.exchangeapi.model.Info;
 import pl.szlify.exchangeapi.model.Query;
@@ -17,16 +18,16 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-@ConditionalOnProperty(prefix = "notification", name = "exchange.api.simulated", havingValue = "true")
+@ConditionalOnProperty(prefix = "exchange.api", name = "simulated", havingValue = "true")
 public class ExchangeServiceSimulated implements ExchangeService {
 
     private final EmailService emailService;
-    private final String getEmailUsername; //Bean
-    private final ExchangeClient exchangeClient;
+//    private final String getEmailUsername; //Bean
+
 
     @Override
     public SymbolsDto getAllSymbols() {
-        return exchangeClient.findAll();
+        return new SymbolsDto().setSymbols(Map.of("PLN", "", "USD", "", "EUR", ""));
     }
 
     @Override
@@ -45,7 +46,7 @@ public class ExchangeServiceSimulated implements ExchangeService {
                 .date("2024-03-06")
                 .result(1290.26)
                 .build();
-        emailService.sendConfirmation(getEmailUsername, convertResponse);
+        emailService.sendConfirmation("exchangeapka@gmail.com", convertResponse);
         return convertResponse;
     }
 }

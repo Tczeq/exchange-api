@@ -11,5 +11,5 @@ import java.math.BigDecimal;
 public interface ExchangeService {
 
     SymbolsDto getAllSymbols();
-    ConvertResponse getConvertedCurrency(String from, String to, BigDecimal amount) throws MessagingException, DocumentException, FileNotFoundException;
+    ConvertResponse getConvertedCurrency(String from, String to, BigDecimal amount);
 }

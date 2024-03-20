@@ -24,19 +24,19 @@ public class ExchangeServiceImpl implements ExchangeService {
 
     private final ExchangeClient exchangeClient;
     private final EmailService emailService;
-    private final String getEmailUsername; //wstrzykniety @Bean z klasy EmailConfig, nie trzeba uzywac tutaj @Value
 
-    @Scheduled(fixedRate = 300000) //1 minuta = 60000
+//    @Scheduled(fixedRate = 300000) //1 minuta = 60000
     @Cacheable(cacheNames = "cacheSymbols")
     @Override
     public SymbolsDto getAllSymbols() {
         return exchangeClient.findAll();
     }
 
+    @Override
     public ConvertResponse getConvertedCurrency(String from, String to, BigDecimal amount) {
         ConvertResponse convertResponse = exchangeClient.convert(from, to, amount);
 //        emailService.sendConfirmation(getEmailUsername, convertResponse);
-        emailService.sendMessageWithAttachment(getEmailUsername, convertResponse);
+        emailService.sendMessageWithAttachment("exchangeapka@gmail.com", convertResponse);
         return convertResponse;
     }
 

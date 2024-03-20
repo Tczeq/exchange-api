@@ -23,7 +23,6 @@ public class ExchangeController {
 
     private final ExchangeService exchangeService;
 
-
     @GetMapping("/symbols")
     public ResponseEntity<SymbolsDto> getSymbols() {
         SymbolsDto symbolsDto = exchangeService.getAllSymbols();
@@ -32,8 +31,9 @@ public class ExchangeController {
 
 
     @GetMapping("/convert")
-    public ResponseEntity<ConvertResponse> convert(@Valid ConvertRequest convertRequest) throws Exception {
-        ConvertResponse response = exchangeService.getConvertedCurrency(convertRequest.getFrom(), convertRequest.getTo(), convertRequest.getAmount());
+    public ResponseEntity<ConvertResponse> convert(@Valid ConvertRequest convertRequest) {
+        ConvertResponse response = exchangeService.getConvertedCurrency(
+                convertRequest.getFrom(), convertRequest.getTo(), convertRequest.getAmount());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

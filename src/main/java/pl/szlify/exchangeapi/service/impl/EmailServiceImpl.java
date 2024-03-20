@@ -1,10 +1,5 @@
 package pl.szlify.exchangeapi.service.impl;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -13,17 +8,11 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import pl.szlify.exchangeapi.generator.PdfGenerator;
+import pl.szlify.exchangeapi.generator.impl.PdfGeneratorImpl;
 import pl.szlify.exchangeapi.model.ConvertResponse;
 import pl.szlify.exchangeapi.service.EmailService;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -34,8 +23,7 @@ class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender emailSender;
     private final String getEmailUsername; //Bean
-
-    private final PdfGenerator pdfGenerator;
+    private final PdfGeneratorImpl pdfGeneratorImpl;
 
     @Override
     public void sendConfirmation(String to, ConvertResponse convertResponse) {
@@ -43,26 +31,26 @@ class EmailServiceImpl implements EmailService {
         message.setFrom(getEmailUsername);
         message.setTo(to);
         message.setSubject(SUBJECT);
-        message.setText(pdfGenerator.createEmailContent(convertResponse));
+        message.setText(pdfGeneratorImpl.createEmailContent(convertResponse));
         emailSender.send(message);
     }
 
     @Override
-    public void sendMessageWithAttachment(ConvertResponse convertResponse) {
+    public void sendMessageWithAttachment(String to, ConvertResponse convertResponse) {
         MimeMessage message = emailSender.createMimeMessage();
 
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(getEmailUsername);
-            helper.setTo(getEmailUsername);
+            helper.setTo(to);
             helper.setSubject(SUBJECT);
-            helper.setText(pdfGenerator.createEmailContent(convertResponse), false); //true dla html, false dla zwyklego tekstu
+            helper.setText(pdfGeneratorImpl.createEmailContent(convertResponse), false); //true dla html, false dla zwyklego tekstu
 
-            FileSystemResource file = new FileSystemResource(new File(pdfGenerator.createPdf(convertResponse)));
+            FileSystemResource file = new FileSystemResource(new File(pdfGeneratorImpl.createPdf(convertResponse)));
             helper.addAttachment("Invoice.pdf", file, "application/pdf");
 
             emailSender.send(message);
-        } catch (MessagingException | FileNotFoundException | DocumentException e) {
+        } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
     }

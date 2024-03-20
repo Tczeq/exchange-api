@@ -2,9 +2,9 @@ exchange:
   api:
     simulated: true
     base-url: https://api.apilayer.com/exchangerates_data
-    api-key: D8FwM98Y6Hq9w8vVqKvZhyT6nx8pj5UJ
+    api-key: Y6Be4VcNjXixmlKfM7jWSDkGAWdinTio
 #    0N48LEmVqIMNZS08m8NTWdG6ItuYwMVI
-
+#  D8FwM98Y6Hq9w8vVqKvZhyT6nx8pj5UJ
 
 spring:
   config:

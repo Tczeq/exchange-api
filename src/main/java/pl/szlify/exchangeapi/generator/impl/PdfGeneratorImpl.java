@@ -1,4 +1,4 @@
-package pl.szlify.exchangeapi.generator;
+package pl.szlify.exchangeapi.generator.impl;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -9,9 +9,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
+import pl.szlify.exchangeapi.generator.PdfService;
 import pl.szlify.exchangeapi.model.ConvertResponse;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -24,39 +24,46 @@ import java.time.format.DateTimeFormatter;
 @Setter
 @Getter
 
-public class PdfGenerator {
+public class PdfGeneratorImpl implements PdfService {
 
 
-    public String createPdf(ConvertResponse convertResponse) throws FileNotFoundException, DocumentException {
-
+    @Override
+    public String createPdf(ConvertResponse convertResponse) {
         String path = System.getProperty("java.io.tmpdir") + "/confirmation_" + System.currentTimeMillis() + ".pdf";
-
-
         Document document = new Document();
-        PdfWriter.getInstance(document, new FileOutputStream(path));
-        document.open();
 
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream(path));
+            document.open();
 
+            addContentToDocument(document, convertResponse);
+            addImageToDocument(document, "src/main/resources/ok.png");
+
+        } catch (DocumentException | IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            document.close();
+        }
+
+        return path;
+    }
+
+    private void addContentToDocument(Document document, ConvertResponse convertResponse) throws DocumentException {
         String emailContent = createEmailContent(convertResponse);
         String[] lines = emailContent.split("\n");
         for (String line : lines) {
             document.add(new Paragraph(line));
         }
-
-        String imagePath = "src/main/resources/ok.png";
-        Image image = null;
-        try {
-            image = Image.getInstance(imagePath);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        image.scalePercent(5);
-        document.add(image);
-
-        document.close();
-        return path;
     }
 
+    private void addImageToDocument(Document document, String imagePath) throws IOException, DocumentException {
+        Image image = Image.getInstance(imagePath);
+        image.scalePercent(5);
+        document.add(image);
+    }
+
+
+    @Override
     public String createEmailContent(ConvertResponse convertResponse) {
         StringBuilder emailContent = new StringBuilder();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");

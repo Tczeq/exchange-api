@@ -8,7 +8,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.szlify.exchangeapi.client.ExchangeClient;
-import pl.szlify.exchangeapi.generator.PdfGenerator;
+import pl.szlify.exchangeapi.generator.impl.PdfGeneratorImpl;
 import pl.szlify.exchangeapi.model.ConvertResponse;
 import pl.szlify.exchangeapi.model.SymbolsDto;
 import pl.szlify.exchangeapi.service.EmailService;
@@ -25,7 +25,6 @@ public class ExchangeServiceImpl implements ExchangeService {
     private final ExchangeClient exchangeClient;
     private final EmailService emailService;
     private final String getEmailUsername; //wstrzykniety @Bean z klasy EmailConfig, nie trzeba uzywac tutaj @Value
-    private final PdfGenerator pdfGenerator;
 
     @Scheduled(fixedRate = 300000) //1 minuta = 60000
     @Cacheable(cacheNames = "cacheSymbols")
@@ -34,11 +33,10 @@ public class ExchangeServiceImpl implements ExchangeService {
         return exchangeClient.findAll();
     }
 
-    //    @Scheduled(fixedRate = 10000) //1 minuta = 60000
     public ConvertResponse getConvertedCurrency(String from, String to, BigDecimal amount) {
         ConvertResponse convertResponse = exchangeClient.convert(from, to, amount);
 //        emailService.sendConfirmation(getEmailUsername, convertResponse);
-        emailService.sendMessageWithAttachment(convertResponse);
+        emailService.sendMessageWithAttachment(getEmailUsername, convertResponse);
         return convertResponse;
     }
 

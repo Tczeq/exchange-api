@@ -8,6 +8,6 @@ import java.io.FileNotFoundException;
 
 public interface EmailService {
     void sendConfirmation(String to, ConvertResponse convertResponse);
-    void sendMessageWithAttachment(String pdfFile);
-    String createPdf(ConvertResponse convertResponse) throws FileNotFoundException, DocumentException;
+    void sendMessageWithAttachment(ConvertResponse convertResponse);
+//    String createPdf(ConvertResponse convertResponse) throws FileNotFoundException, DocumentException;
 }

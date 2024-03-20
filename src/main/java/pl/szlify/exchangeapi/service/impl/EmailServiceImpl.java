@@ -13,6 +13,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import pl.szlify.exchangeapi.generator.PdfGenerator;
 import pl.szlify.exchangeapi.model.ConvertResponse;
 import pl.szlify.exchangeapi.service.EmailService;
 
@@ -26,12 +27,15 @@ import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
-public class EmailServiceImpl implements EmailService {
+public
+class EmailServiceImpl implements EmailService {
 
     private static final String SUBJECT = "Exchange confirmation";
 
     private final JavaMailSender emailSender;
     private final String getEmailUsername; //Bean
+
+    private final PdfGenerator pdfGenerator;
 
     @Override
     public void sendConfirmation(String to, ConvertResponse convertResponse) {
@@ -39,100 +43,28 @@ public class EmailServiceImpl implements EmailService {
         message.setFrom(getEmailUsername);
         message.setTo(to);
         message.setSubject(SUBJECT);
-        message.setText(createEmailContent(convertResponse));
+        message.setText(pdfGenerator.createEmailContent(convertResponse));
         emailSender.send(message);
     }
 
-    public String createEmailContent(ConvertResponse convertResponse) {
-        StringBuilder emailContent = new StringBuilder();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate date = LocalDate.parse(convertResponse.getDate());
-        emailContent.append("Potwierdzenie wymiany walut,")
-                .append("\n")
-                .append("z dnia: ")
-                .append(date.format(formatter))
-                .append("\n\n");
-        emailContent.append("Sukces: ")
-                .append(convertResponse.isSuccess() ? "Tak" : "Nie")
-                .append("\n\n");
-
-        DecimalFormat formatRate = new DecimalFormat("0.00");
-        emailContent.append("Wymiana:")
-                .append("\n");
-        emailContent.append(" - ")
-                .append(convertResponse.getQuery().getFrom())
-                .append("/")
-                .append(convertResponse.getQuery().getTo())
-                .append("\n");
-        emailContent.append(" - Ilość: ")
-                .append(convertResponse.getQuery().getAmount())
-                .append("\n");
-        emailContent.append(" - Kurs: ")
-                .append(formatRate.format(convertResponse.getInfo().getRate()))
-                .append("\n");
-
-        DecimalFormat format = new DecimalFormat("#.##");
-        emailContent.append("Wynik transakcji: ")
-                .append(format.format(convertResponse.getResult()))
-                .append(" ")
-                .append(convertResponse.getQuery().getTo());
-
-        return emailContent.toString();
-    }
-
-
     @Override
-    public void sendMessageWithAttachment(String pdfFile) {
+    public void sendMessageWithAttachment(ConvertResponse convertResponse) {
         MimeMessage message = emailSender.createMimeMessage();
 
-        MimeMessageHelper helper = null;
         try {
-            helper = new MimeMessageHelper(message, true);
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setFrom(getEmailUsername);
             helper.setTo(getEmailUsername);
             helper.setSubject(SUBJECT);
-            helper.setText("Attachment confirmation");
+            helper.setText(pdfGenerator.createEmailContent(convertResponse), false); //true dla html, false dla zwyklego tekstu
 
-            FileSystemResource file = new FileSystemResource(new File(pdfFile));
+            FileSystemResource file = new FileSystemResource(new File(pdfGenerator.createPdf(convertResponse)));
             helper.addAttachment("Invoice.pdf", file, "application/pdf");
 
             emailSender.send(message);
-        } catch (MessagingException e) {
+        } catch (MessagingException | FileNotFoundException | DocumentException e) {
             throw new RuntimeException(e);
         }
-    }
-
-
-
-
-    public String createPdf(ConvertResponse convertResponse) throws FileNotFoundException, DocumentException {
-
-        String path = System.getProperty("java.io.tmpdir") + "/confirmation_" + System.currentTimeMillis() + ".pdf";
-
-
-        Document document = new Document();
-        PdfWriter.getInstance(document, new FileOutputStream(path));
-        document.open();
-
-
-        String emailContent = createEmailContent(convertResponse);
-        String[] lines = emailContent.split("\n");
-        for (String line : lines) {
-            document.add(new Paragraph(line));
-        }
-
-        String imagePath = "src/main/resources/ok.png";
-        Image image = null;
-        try {
-            image = Image.getInstance(imagePath);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        image.scalePercent(5);
-        document.add(image);
-
-        document.close();
-        return path;
     }
 
 }

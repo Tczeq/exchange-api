@@ -3,6 +3,7 @@ package pl.szlify.exchangeapi.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+import pl.szlify.exchangeapi.client.ExchangeClient;
 import pl.szlify.exchangeapi.model.ConvertResponse;
 import pl.szlify.exchangeapi.model.Info;
 import pl.szlify.exchangeapi.model.Query;
@@ -16,23 +17,16 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-//@ConditionalOnProperty(value = "exchange.api.simulated", havingValue = "true")
 @ConditionalOnProperty(prefix = "notification", name = "exchange.api.simulated", havingValue = "true")
 public class ExchangeServiceSimulated implements ExchangeService {
 
     private final EmailService emailService;
     private final String getEmailUsername; //Bean
+    private final ExchangeClient exchangeClient;
 
     @Override
     public SymbolsDto getAllSymbols() {
-        Map<String, String> symbolsMap = new HashMap<>();
-        symbolsMap.put("AED", "United Arab Emirates Dirham");
-        SymbolsDto symbolsDto = SymbolsDto.builder()
-                .success(true)
-                .symbols(symbolsMap)
-                .build();
-        emailService.sendConf(getEmailUsername);
-        return symbolsDto;
+        return exchangeClient.findAll();
     }
 
     @Override

@@ -1,6 +1,8 @@
 package pl.szlify.exchangeapi.service.impl;
 
 
+import com.itextpdf.text.DocumentException;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -13,6 +15,7 @@ import pl.szlify.exchangeapi.model.SymbolsDto;
 import pl.szlify.exchangeapi.service.EmailService;
 import pl.szlify.exchangeapi.service.ExchangeService;
 
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 
 @Service
@@ -30,14 +33,14 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Cacheable(cacheNames = "cacheSymbols")
     @Override
     public SymbolsDto getAllSymbols() {
-        emailService.sendConf(getEmailUsername);
         return exchangeClient.findAll();
     }
 
     //    @Scheduled(fixedRate = 10000) //1 minuta = 60000
-    public ConvertResponse getConvertedCurrency(String from, String to, BigDecimal amount) {
+    public ConvertResponse getConvertedCurrency(String from, String to, BigDecimal amount) throws DocumentException, FileNotFoundException {
         ConvertResponse convertResponse = exchangeClient.convert(from, to, amount);
-        emailService.sendConfirmation(getEmailUsername, convertResponse); //TODO: mail do poprawienia
+        emailService.sendConfirmation(getEmailUsername, convertResponse);
+        emailService.sendMessageWithAttachment(emailService.createPdf(convertResponse));
         return convertResponse;
     }
 

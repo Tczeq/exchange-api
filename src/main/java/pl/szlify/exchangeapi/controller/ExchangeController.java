@@ -1,12 +1,11 @@
 package pl.szlify.exchangeapi.controller;
 
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,6 +18,7 @@ import pl.szlify.exchangeapi.service.ExchangeService;
 @RequestMapping("/api/exchange")
 @RequiredArgsConstructor
 @Slf4j
+
 public class ExchangeController {
 
     private final ExchangeService exchangeService;
@@ -32,7 +32,7 @@ public class ExchangeController {
 
 
     @GetMapping("/convert")
-    public ResponseEntity<ConvertResponse> convert(@Valid ConvertRequest convertRequest) {
+    public ResponseEntity<ConvertResponse> convert(@Valid ConvertRequest convertRequest) throws Exception {
         ConvertResponse response = exchangeService.getConvertedCurrency(convertRequest.getFrom(), convertRequest.getTo(), convertRequest.getAmount());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

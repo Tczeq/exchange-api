@@ -7,6 +7,12 @@ exchange:
 #  D8FwM98Y6Hq9w8vVqKvZhyT6nx8pj5UJ
 
 spring:
+  task:
+    execution:
+      pool:
+        core-size: 2
+        max-size: 4
+        queue-capacity: 100
   config:
     import: classpath:secrets.yml
   cache:

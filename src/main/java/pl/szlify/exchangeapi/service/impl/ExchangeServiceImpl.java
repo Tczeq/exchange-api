@@ -11,6 +11,7 @@ import pl.szlify.exchangeapi.client.ExchangeClient;
 import pl.szlify.exchangeapi.generator.impl.PdfGeneratorImpl;
 import pl.szlify.exchangeapi.model.ConvertResponse;
 import pl.szlify.exchangeapi.model.SymbolsDto;
+import pl.szlify.exchangeapi.properties.ExchangeApiProperties;
 import pl.szlify.exchangeapi.service.EmailService;
 import pl.szlify.exchangeapi.service.ExchangeService;
 
@@ -22,6 +23,7 @@ import java.math.BigDecimal;
 @Setter
 public class ExchangeServiceImpl implements ExchangeService {
 
+    private final ExchangeApiProperties properties;
     private final ExchangeClient exchangeClient;
     private final EmailService emailService;
 
@@ -35,8 +37,8 @@ public class ExchangeServiceImpl implements ExchangeService {
     @Override
     public ConvertResponse getConvertedCurrency(String from, String to, BigDecimal amount) {
         ConvertResponse convertResponse = exchangeClient.convert(from, to, amount);
-//        emailService.sendConfirmation(getEmailUsername, convertResponse);
-        emailService.sendMessageWithAttachment("exchangeapka@gmail.com", convertResponse);
+//        emailService.sendConfirmation(properties.getBaseUrl(), convertResponse);
+        emailService.sendMessageWithAttachment(properties.getBaseUrl(), convertResponse);
         return convertResponse;
     }
 

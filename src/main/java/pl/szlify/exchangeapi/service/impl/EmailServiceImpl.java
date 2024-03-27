@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import pl.szlify.exchangeapi.generator.impl.PdfGeneratorImpl;
 import pl.szlify.exchangeapi.model.ConvertResponse;
+import pl.szlify.exchangeapi.properties.ExchangeApiProperties;
 import pl.szlify.exchangeapi.service.EmailService;
 
 import java.io.File;
@@ -23,6 +24,7 @@ public class EmailServiceImpl implements EmailService {
 
     private static final String SUBJECT = "Exchange confirmation";
 
+    private final ExchangeApiProperties properties;
     private final JavaMailSender emailSender;
     private final PdfGeneratorImpl pdfGeneratorImpl;
 
@@ -36,7 +38,7 @@ public class EmailServiceImpl implements EmailService {
 
         }
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("exchangeapka@gmail.com");
+        message.setFrom(properties.getBaseUrl());
         message.setTo(to);
         message.setSubject(SUBJECT);
         message.setText(pdfGeneratorImpl.createEmailContent(convertResponse));
@@ -50,7 +52,7 @@ public class EmailServiceImpl implements EmailService {
 
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            helper.setFrom("exchangeapka@gmail.com");
+            helper.setFrom(properties.getBaseUrl());
             helper.setTo(to);
             helper.setSubject(SUBJECT);
             helper.setText(pdfGeneratorImpl.createEmailContent(convertResponse), false); //true dla html, false dla zwyklego tekstu

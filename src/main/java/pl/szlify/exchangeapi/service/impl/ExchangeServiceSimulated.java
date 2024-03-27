@@ -9,10 +9,12 @@ import pl.szlify.exchangeapi.model.ConvertResponse;
 import pl.szlify.exchangeapi.model.Info;
 import pl.szlify.exchangeapi.model.Query;
 import pl.szlify.exchangeapi.model.SymbolsDto;
+import pl.szlify.exchangeapi.properties.ExchangeApiProperties;
 import pl.szlify.exchangeapi.service.EmailService;
 import pl.szlify.exchangeapi.service.ExchangeService;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +23,7 @@ import java.util.Map;
 @ConditionalOnProperty(prefix = "exchange.api", name = "simulated", havingValue = "true")
 public class ExchangeServiceSimulated implements ExchangeService {
 
+    private final ExchangeApiProperties properties;
     private final EmailService emailService;
 //    private final String getEmailUsername; //Bean
 
@@ -43,10 +46,10 @@ public class ExchangeServiceSimulated implements ExchangeService {
                         .timestamp(123L)
                         .rate(4.30)
                         .build())
-                .date("2024-03-06")
+                .date(LocalDate.now().toString())
                 .result(1290.26)
                 .build();
-        emailService.sendConfirmation("exchangeapka@gmail.com", convertResponse);
+        emailService.sendConfirmation(properties.getBaseUrl(), convertResponse);
         return convertResponse;
     }
 }

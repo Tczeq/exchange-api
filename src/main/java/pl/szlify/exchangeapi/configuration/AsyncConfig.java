@@ -1,16 +1,27 @@
 package pl.szlify.exchangeapi.configuration;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-@Configuration
+@ConfigurationProperties(prefix = "spring.task.execution.pool")
+@Getter
+@Setter
 public class AsyncConfig {
 
+    private int core_size;
+    private int max_size;
+    private int queue_capacity;
+
     @Bean
-    public ExecutorService asyncTaskExecutor() {    //TODO: ThreadPoolTaskExecutor
-        return Executors.newFixedThreadPool(2); //TODO: dane konfiguracyjne zaciągać z yml
+    public ThreadPoolTaskExecutor asyncTaskExecutor() {    //TODO: ThreadPoolTaskExecutor
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(core_size);
+        executor.setMaxPoolSize(max_size);
+        executor.setQueueCapacity(queue_capacity);
+//        executor.initialize();
+        return executor;
     }
 }
